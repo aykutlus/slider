@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables file
+.env
+
+# IDE/Editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Compiled python files
+*.pyc
+*.pyo
+
+# Logs
+*.log
+logs/
+
+# Python coverage reports
+.coverage
+htmlcov/
+
+# Dependencies
+venv/
+env/
+env-bak/
+
+# Distribution
+*.egg
+*.egg-info
+dist/
+build/
+
+# Database
+*.db
+
+# User-specific files
+*.history
+*.bak
+*.DS_Store
+
+# PyInstaller
+.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints/

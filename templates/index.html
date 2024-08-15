@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Photo Slider</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div id="background-blur"></div>
+    <div id="content">
+        <div id="left-thumbnails" class="thumbnails-container"></div>
+
+        <div id="image-slider">
+            <div id="new-photo-text">New Photo</div>
+            <img id="current-image" src="" alt="Slider Image">
+        </div>
+
+        <div id="right-thumbnails" class="thumbnails-container"></div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
