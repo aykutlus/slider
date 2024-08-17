@@ -43,19 +43,6 @@ function updateImage(newImageUrl, previousImageUrl) {
     backgroundBlur.style.backgroundImage = `url(${newImageUrl})`;
 }
 
-function addThumbnail(imageUrl, container) {
-    const thumb = document.createElement('img');
-    thumb.src = imageUrl;
-    thumb.onclick = () => {
-        const previousIndex = currentIndex;
-        currentIndex = images.indexOf(imageUrl);
-        updateImage(imageUrl, images[previousIndex]);
-        showNewPhotoText();
-        setTimeout(hideNewPhotoText, 6000); // Hide "New Photo" text after 6 seconds
-    };
-    container.appendChild(thumb);
-}
-
 function duplicateThumbnailsForSeamlessLoop(container) {
     const thumbnails = Array.from(container.children);
     thumbnails.forEach(thumb => {
@@ -78,18 +65,54 @@ socket.on('new-image', (data) => {
     startSlider();
 });
 
+function addThumbnail(imageUrl, container, index) {
+    const thumb = document.createElement('img');
+    thumb.src = imageUrl;
+    thumb.classList.add(`thumbnail-${index}`);  // Add unique class based on index
+
+    // // Only show the first 4 thumbnails initially
+    // if (index < 4) {
+    //     thumb.style.opacity = 1;  // Make it visible
+    // } else {
+    //     thumb.style.opacity = 0;  // Start hidden
+    //     thumb.style.visibility = 'hidden';  // Ensure it doesn't take up space
+    // }
+
+    container.appendChild(thumb);
+
+    // Set a fixed gap (e.g., 20px) between thumbnails
+    const gap = 20;
+    const thumbnailHeight = 100;  // Assume a fixed height for each thumbnail (adjust as needed)
+    const initialTranslateY = (thumbnailHeight + gap) * index;  // Calculate initial Y position based on index
+
+    thumb.style.transform = `translateY(${initialTranslateY}px)`;  // Set initial position
+
+    // Delay the animation for each thumbnail
+    setTimeout(() => {
+        thumb.style.visibility = 'visible';  // Make it visible
+        thumb.style.opacity = 1;  // Reveal the image as the animation starts
+        thumb.style.animation = `scrollThumbnail 10s linear infinite ${index * 2}s`;  // Apply delay with animation
+    }, 100);  // Minor delay to ensure proper rendering before animation starts
+
+    thumb.onclick = () => {
+        const previousIndex = currentIndex;
+        currentIndex = images.indexOf(imageUrl);
+        updateImage(imageUrl, images[previousIndex]);
+    };
+}
+
+
 fetch('/photos')
     .then(response => response.json())
     .then(data => {
         images = data;
         if (images.length > 0) {
             updateImage(images[0]);
-            images.forEach(imageUrl => {
-                addThumbnail(imageUrl, leftThumbnailsContainer);
-                addThumbnail(imageUrl, rightThumbnailsContainer);
+            images.forEach((imageUrl, index) => {
+                // Pass the index to the addThumbnail function
+                addThumbnail(imageUrl, leftThumbnailsContainer, index);
+                addThumbnail(imageUrl, rightThumbnailsContainer, index);
             });
-            duplicateThumbnailsForSeamlessLoop(leftThumbnailsContainer); // Duplicate for smooth loop
-            duplicateThumbnailsForSeamlessLoop(rightThumbnailsContainer); // Duplicate for smooth loop
             startSlider();
         }
     });
